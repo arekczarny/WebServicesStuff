@@ -20,9 +20,12 @@ import javax.xml.ws.Endpoint;
 @Configuration
 public class WSConfiguration {
 
+	public static final String BASE_URL = "/soap-api";
+	public static final String SERVICE_URL = "/WeatherSoapService_1.0";
+
 	@Bean
 	public ServletRegistrationBean dispatcherServlet() {
-		return new ServletRegistrationBean(new CXFServlet(), "/soap-api/*");
+		return new ServletRegistrationBean(new CXFServlet(), BASE_URL + "/*");
 	}
 
 	@Bean(name = Bus.DEFAULT_BUS_ID)
@@ -38,7 +41,7 @@ public class WSConfiguration {
 	@Bean
 	public Endpoint endpoint() {
 		EndpointImpl endpoint = new EndpointImpl(cxfSpringBus(), weatherService());
-		endpoint.publish("/WeatherSoapService_1.0");
+		endpoint.publish(SERVICE_URL);
 		endpoint.setWsdlLocation("Weather1.0.wsdl");
 		return endpoint;
 	}

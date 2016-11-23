@@ -1,6 +1,6 @@
 package com.codeblazing.bootcxfsoap.endpoint;
 
-import com.codeblazing.bootcxfsoap.config.ApplicationTestConfiguration;
+import com.codeblazing.bootcxfsoap.config.WebServiceIntegrationTestConfiguration;
 import com.codeblazing.namespace.weatherservice.WeatherException;
 import com.codeblazing.namespace.weatherservice.WeatherService;
 import com.codeblazing.namespace.weatherservice.general.ForecastRequest;
@@ -12,19 +12,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.codeblazing.bootcxfsoap.utils.TestHelper.generateDummyRequest;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author: Arek Czarnoglowski
- * @created: 2016-11-23 21:05
+ * @created: 2016-11-23 22:58
  * @version: 1.0
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ApplicationTestConfiguration.class)
-public class WeatherServiceTest {
+@ContextConfiguration(classes = WebServiceIntegrationTestConfiguration.class)
+public class WeatherServiceIntegrationTest {
 
 	@Autowired
-	private WeatherService weatherServiceEndpoint;
+	private WeatherService weatherServiceIntegrationTestClient;
 
 	@Test
 	public void getCityForecastByZIP() throws WeatherException {
@@ -32,12 +33,10 @@ public class WeatherServiceTest {
 		ForecastRequest forecastRequest = generateDummyRequest();
 
 		// When
-		ForecastReturn forecastReturn = weatherServiceEndpoint.getCityForecastByZIP(forecastRequest);
+		ForecastReturn forecastReturn = weatherServiceIntegrationTestClient.getCityForecastByZIP(forecastRequest);
 
 		// Then
 		assertNotNull(forecastReturn);
-		assertEquals(true, forecastReturn.isSuccess());
-		assertEquals("Weimar", forecastReturn.getCity());
 		assertEquals("22%", forecastReturn.getForecastResult().getForecast().get(0).getProbabilityOfPrecipiation().getDaytime());
 	}
 }

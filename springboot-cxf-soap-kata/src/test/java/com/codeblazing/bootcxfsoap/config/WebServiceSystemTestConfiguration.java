@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class WebServiceSystemTestConfiguration {
 
 	@Bean
-	WeatherService weatherServiceIntegrationTestClient() {
+	WeatherService weatherServiceSystemTestClient() {
 		JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
 		jaxWsProxyFactoryBean.setServiceClass(WeatherService.class);
 		jaxWsProxyFactoryBean.setAddress("http://localhost:8099" + WSConfiguration.BASE_URL + WSConfiguration.SERVICE_URL);

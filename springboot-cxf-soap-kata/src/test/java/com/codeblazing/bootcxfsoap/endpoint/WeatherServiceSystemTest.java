@@ -8,8 +8,8 @@ import com.codeblazing.namespace.weatherservice.general.ForecastReturn;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.codeblazing.bootcxfsoap.utils.TestHelper.generateDummyRequest;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
  * @version: 1.0
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = SimpleBootCxfSystemTestApplication.class)
+@SpringApplicationConfiguration(classes = SimpleBootCxfSystemTestApplication.class)
 @WebIntegrationTest("server.port:8099")
 public class WeatherServiceSystemTest {
 

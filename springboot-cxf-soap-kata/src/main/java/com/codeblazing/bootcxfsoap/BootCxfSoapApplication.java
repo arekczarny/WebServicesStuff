@@ -13,5 +13,6 @@ public class BootCxfSoapApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BootCxfSoapApplication.class);
+
 	}
 }

@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 
 import com.codeblazing.bootcxfsoap.SimpleBootCxfSystemTestApplication;
-import com.codeblazing.bootcxfsoap.utils.XmlUtils;
-import com.codeblazing.bootcxfsoap.utils.XmlUtilsException;
+import com.codeblazing.bootcxfsoap.common.XmlUtils;
+import com.codeblazing.bootcxfsoap.common.XmlUtilsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

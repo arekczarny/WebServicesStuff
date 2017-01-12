@@ -1,8 +1,11 @@
 package com.codeblazing.bootcxfsoap.config;
 
+import com.codeblazing.bootcxfsoap.config.customsoapfaults.CustomSoapFaultInterceptor;
 import com.codeblazing.bootcxfsoap.endpoint.WeatherServiceEndpoint;
+import com.codeblazing.namespace.weatherservice.Weather;
 import com.codeblazing.namespace.weatherservice.WeatherService;
 import org.apache.cxf.Bus;
+import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
@@ -38,11 +41,25 @@ public class WSConfiguration {
 		return new WeatherServiceEndpoint();
 	}
 
+
+	@Bean
+	public Weather weather() {
+		// Needed for correct ServiceName & WSDLLocation to publish contract first incl. original WSDL
+		return new Weather();
+	}
+
 	@Bean
 	public Endpoint endpoint() {
 		EndpointImpl endpoint = new EndpointImpl(cxfSpringBus(), weatherService());
+		endpoint.setServiceName(weather().getServiceName());
+		endpoint.setWsdlLocation(weather().getWSDLDocumentLocation().toString());
 		endpoint.publish(SERVICE_URL);
-		endpoint.setWsdlLocation("Weather1.0.wsdl");
+		endpoint.getOutFaultInterceptors().add(soapInterceptor());
 		return endpoint;
+	}
+
+	@Bean
+	public AbstractSoapInterceptor soapInterceptor() {
+		return new CustomSoapFaultInterceptor();
 	}
 }

@@ -1,4 +1,4 @@
-package com.codeblazing.bootcxfsoap.utils;
+package com.codeblazing.bootcxfsoap.common;
 
 import java.io.InputStream;
 import java.io.StringReader;
@@ -144,7 +144,7 @@ public final class XmlUtils {
 		return documentBuilder;
 	}
 
-	public static Document marhallJaxbElementIntoDocument(Object jaxbElement) throws XmlUtilsException {
+	public static Document marshallJaxbElementIntoDocument(Object jaxbElement) throws XmlUtilsException {
 		Document jaxbDoc = null;
 		try {
 			Marshaller marshaller = setUpMarshaller(jaxbElement.getClass());

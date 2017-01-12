@@ -1,4 +1,4 @@
-package com.codeblazing.bootcxfsoap.utils;
+package com.codeblazing.bootcxfsoap.common;
 
 /**
  * @author: Arek Czarnoglowski

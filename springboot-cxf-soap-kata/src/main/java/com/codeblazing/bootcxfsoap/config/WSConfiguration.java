@@ -2,11 +2,17 @@ package com.codeblazing.bootcxfsoap.config;
 
 import com.codeblazing.bootcxfsoap.config.customsoapfaults.CustomSoapFaultInterceptor;
 import com.codeblazing.bootcxfsoap.endpoint.WeatherServiceEndpoint;
+import com.codeblazing.bootcxfsoap.logging.LoggingInInterceptorXmlOnly;
+import com.codeblazing.bootcxfsoap.logging.LoggingOutInterceptorXmlOnly;
 import com.codeblazing.namespace.weatherservice.Weather;
 import com.codeblazing.namespace.weatherservice.WeatherService;
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
+import org.apache.cxf.feature.LoggingFeature;
+import org.apache.cxf.interceptor.AbstractLoggingInterceptor;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -33,7 +39,22 @@ public class WSConfiguration {
 
 	@Bean(name = Bus.DEFAULT_BUS_ID)
 	public SpringBus cxfSpringBus() {
-		return new SpringBus();
+		SpringBus springBus = new SpringBus();
+
+		//Logging
+		LoggingFeature loggingFeature = new LoggingFeature();
+		loggingFeature.setPrettyLogging(true);
+		loggingFeature.initialize(springBus);
+		springBus.getFeatures().add(loggingFeature);
+
+		//Interceptors
+		springBus.getInInterceptors().add(logInInterceptor());
+		springBus.getInFaultInterceptors().add(logInInterceptor());
+		springBus.getOutInterceptors().add(logOutInterceptor());
+		springBus.getOutFaultInterceptors().add(logOutInterceptor());
+		springBus.getOutFaultInterceptors().add(soapInterceptor());
+
+		return springBus;
 	}
 
 	@Bean
@@ -54,12 +75,32 @@ public class WSConfiguration {
 		endpoint.setServiceName(weather().getServiceName());
 		endpoint.setWsdlLocation(weather().getWSDLDocumentLocation().toString());
 		endpoint.publish(SERVICE_URL);
-		endpoint.getOutFaultInterceptors().add(soapInterceptor());
+
+//		LoggingFeature loggingFeature = new LoggingFeature();
+//		loggingFeature.setPrettyLogging(true);
+//		loggingFeature.initialize(cxfSpringBus());
+//
+//		endpoint.getFeatures().add(loggingFeature);
+//		endpoint.getOutFaultInterceptors().add(soapInterceptor());
 		return endpoint;
 	}
 
 	@Bean
 	public AbstractSoapInterceptor soapInterceptor() {
 		return new CustomSoapFaultInterceptor();
+	}
+
+	@Bean
+	public AbstractLoggingInterceptor logInInterceptor() {
+		LoggingInInterceptor logInInterceptor = new LoggingInInterceptorXmlOnly();
+		// The In-Messages are pretty without setting it - when setting it Apache CXF throws empty lines into the In-Messages
+		return logInInterceptor;
+	}
+
+	@Bean
+	public AbstractLoggingInterceptor logOutInterceptor() {
+		LoggingOutInterceptor logOutInterceptor = new LoggingOutInterceptorXmlOnly();
+		logOutInterceptor.setPrettyLogging(true);
+		return logOutInterceptor;
 	}
 }

@@ -94,6 +94,7 @@ public class WSConfiguration {
 	public AbstractLoggingInterceptor logInInterceptor() {
 		LoggingInInterceptor logInInterceptor = new LoggingInInterceptorXmlOnly();
 		// The In-Messages are pretty without setting it - when setting it Apache CXF throws empty lines into the In-Messages
+		logInInterceptor.setPrettyLogging(true);
 		return logInInterceptor;
 	}
 

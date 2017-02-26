@@ -5,15 +5,28 @@
     <logger name="com.codeblazing.bootcxfsoap" level="DEBUG"/>
     <logger name="org.apache.cxf" level="INFO"/>
 
-    <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file> weather-service.log </file>
-        <append>true</append>
-        <encoder>
-            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    <!-- Logstash-Configuration -->
+    <!--<appender name="file" class="ch.qos.logback.core.FileAppender">-->
+    <!--<file> weather-service.log </file>-->
+    <!--<append>true</append>-->
+    <!--<encoder>-->
+    <!--<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>-->
+    <!--</encoder>-->
+    <!--</appender>-->
+    <!-- For details see https://github.com/logstash/logstash-logback-encoder -->
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>0.0.0.0:5000</destination>
+        <!-- encoder is required -->
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service_name":"WeatherService 1.0"}</customFields>
+            <fieldNames>
+                <message>log_msg</message>
+            </fieldNames>
         </encoder>
+        <keepAliveDuration>5 minutes</keepAliveDuration>
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="file" />
+        <appender-ref ref="logstash" />
     </root>
 </configuration>
